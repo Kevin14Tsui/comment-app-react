@@ -5,6 +5,7 @@ const Comment = ({
   replies,
   currentUserId,
   deleteComment,
+  updateComment,
   setActiveComment,
   activeComment,
   addComment,
@@ -42,7 +43,18 @@ const Comment = ({
             <div>{createdAt}</div>
           </div>
         </div>
-        <div className="comment-text">{comment.body}</div>
+        {!isEditing && <div className="comment-text">{comment.body}</div>}
+        {isEditing && (
+          <CommentForm
+            submitLabel="Update"
+            hasCancelButton
+            initialText={comment.body}
+            handleSubmit={(text) => updateComment(text, comment.id)}
+            handleCancel={() => {
+              setActiveComment(null);
+            }}
+          />
+        )}
         <div className="comment-actions">
           {canReply && (
             <div
@@ -85,9 +97,9 @@ const Comment = ({
               <Comment
                 comment={reply}
                 key={reply.id}
-                // setActiveComment={setActiveComment}
-                // activeComment={activeComment}
-                // updateComment={updateComment}
+                setActiveComment={setActiveComment}
+                activeComment={activeComment}
+                updateComment={updateComment}
                 deleteComment={deleteComment}
                 addComment={addComment}
                 parentId={comment.id}

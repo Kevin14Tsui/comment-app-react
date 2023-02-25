@@ -1,7 +1,13 @@
 import { useState } from "react";
 
-const CommentForm = ({ handleSubmit, submitLabel }) => {
-  const [text, setText] = useState("");
+const CommentForm = ({
+  handleSubmit,
+  submitLabel,
+  hasCancelButton = false,
+  handleCancel,
+  initialText = "",
+}) => {
+  const [text, setText] = useState(initialText);
   //   if text.lengtg=0 disabled
   const isTextareaDisabled = text.length === 0;
   const onSubmit = (event) => {
@@ -20,6 +26,15 @@ const CommentForm = ({ handleSubmit, submitLabel }) => {
       <button className="comment-form-button" disabled={isTextareaDisabled}>
         {submitLabel}
       </button>
+      {hasCancelButton && (
+        <button
+          type="button"
+          className="comment-form-button comment-form-cancel-button"
+          onClick={handleCancel}
+        >
+          Cancel
+        </button>
+      )}
     </form>
   );
 };

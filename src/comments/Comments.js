@@ -5,6 +5,7 @@ import {
   getComments as getCommentsApi,
   createComment as createCommentApi,
   deleteComment as deleteCommentApi,
+  updateComment as updateCommentApi,
 } from "../api";
 
 const Comments = ({ currentUserId }) => {
@@ -26,6 +27,20 @@ const Comments = ({ currentUserId }) => {
   const addComment = (text, parentId) => {
     createCommentApi(text, parentId).then((comment) => {
       setBackendComments([comment, ...backendComments]);
+      setActiveComment(null);
+    });
+  };
+
+  const updateComment = (text, commentId) => {
+    updateCommentApi(text).then(() => {
+      const updatedBackendComments = backendComments.map((backendComment) => {
+        if (backendComment.id === commentId) {
+          return { ...backendComment, body: text };
+        }
+        return backendComment;
+      });
+      setBackendComments(updatedBackendComments);
+      setActiveComment(null);
     });
   };
 
@@ -61,7 +76,7 @@ const Comments = ({ currentUserId }) => {
             setActiveComment={setActiveComment}
             addComment={addComment}
             deleteComment={deleteComment}
-            // updateComment={updateComment}
+            updateComment={updateComment}
             currentUserId={currentUserId}
           />
         ))}
