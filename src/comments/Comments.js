@@ -4,10 +4,12 @@ import CommentForm from "./CommentForm";
 import {
   getComments as getCommentsApi,
   createComment as createCommentApi,
+  deleteComment as deleteCommentApi,
 } from "../api";
 
 const Comments = ({ currentUserId }) => {
   const [backendComments, setBackendComments] = useState([]);
+  const [activeComment, setActiveComment] = useState(null);
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parentId === null
   );
@@ -27,6 +29,17 @@ const Comments = ({ currentUserId }) => {
     });
   };
 
+  const deleteComment = (commentId) => {
+    if (window.confirm("Are you sure you want to remove comment?")) {
+      deleteCommentApi().then(() => {
+        const updatedBackendComments = backendComments.filter(
+          (backendComment) => backendComment.id !== commentId
+        );
+        setBackendComments(updatedBackendComments);
+      });
+    }
+  };
+
   // fetch data
   useEffect(() => {
     getCommentsApi().then((data) => {
@@ -44,12 +57,12 @@ const Comments = ({ currentUserId }) => {
             key={rootComment.id}
             comment={rootComment}
             replies={getReplies(rootComment.id)}
-            // activeComment={activeComment}
-            // setActiveComment={setActiveComment}
-            // addComment={addComment}
-            // deleteComment={deleteComment}
+            activeComment={activeComment}
+            setActiveComment={setActiveComment}
+            addComment={addComment}
+            deleteComment={deleteComment}
             // updateComment={updateComment}
-            // currentUserId={currentUserId}
+            currentUserId={currentUserId}
           />
         ))}
       </div>
